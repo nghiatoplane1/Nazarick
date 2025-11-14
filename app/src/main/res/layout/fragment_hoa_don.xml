@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_hoa_don_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HoaDonFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hóa đơn"
+            android:textSize="34sp" />
+
+        <Spinner
+            android:id="@+id/spinner_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tổng tiền hàng"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txt_tongtien_hoadon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 VNĐ"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#2196F3" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lv_hoadon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#E0E0E0"
+            android:dividerHeight="1dp" />
+    </LinearLayout>
+</FrameLayout>
