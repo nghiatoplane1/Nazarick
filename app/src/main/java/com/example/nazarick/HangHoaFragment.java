@@ -1,12 +1,18 @@
 package com.example.nazarick;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,50 +22,139 @@ import java.util.ArrayList;
 
 public class HangHoaFragment extends Fragment {
 
-    private TextView txt_hanghoa, txt_tongton;
+    private TextView txt_hanghoa, txt_tongton, txt_tongsanpham;
     private ListView listView;
     private ArrayList<HangHoa> danhSachHangHoa;
     private HangHoaAdapter adapter;
+    EditText editText_nameproduct;
+    EditText editText_price;
+    EditText editText_quantity;
+    Button button_addproduct;
+    static SQLiteDatabase mydatabase;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_hang_hoa, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
+        View view = inflater.inflate(R.layout.fragment_hang_hoa, container, false);
+        editText_nameproduct = view.findViewById(R.id.editText_nameproduct);
+        editText_price = view.findViewById(R.id.editText_price);
+        editText_quantity = view.findViewById(R.id.editText_quantity);
         txt_hanghoa = view.findViewById(R.id.txt_hanghoa);
         txt_tongton = view.findViewById(R.id.txt_hanghoa);
+        txt_tongsanpham = view.findViewById(R.id.txt_tongsanpham);
         listView = view.findViewById(R.id.lv_hanghoa);
+        button_addproduct = view.findViewById(R.id.button_addproduct);
 
-        khoiTaoDuLieu();
+        // Mở / tạo database giống MainActivity
+        mydatabase = requireActivity().openOrCreateDatabase("quanlytaphoa.db",
+                getContext().MODE_PRIVATE, null);
 
-        capNhatTongTon();
+        // Tạo bảng nếu chưa có
+        try {
 
+            String sql = "CREATE TABLE tbHangHoa(" +
+                    "tenSanPham TEXT PRIMARY KEY, " +
+                    "soLuongTon INTEGER, " +
+                    "giaBan INTEGER)";
+            mydatabase.execSQL(sql);
+        } catch (Exception e) {
+            // bảng đã tồn tại
+        }
+
+        danhSachHangHoa = new ArrayList<>();
         adapter = new HangHoaAdapter(requireContext(), danhSachHangHoa);
         listView.setAdapter(adapter);
+
+        // Load dữ liệu khi mở fragment
+        loadData();
+
+        // Thêm sản phẩm mẫu khi nhấn button
+        button_addproduct.setOnClickListener(v -> {
+
+            String ten = editText_nameproduct.getText().toString().trim();
+            String giaText = editText_price.getText().toString().trim();
+            String soLuongText = editText_quantity.getText().toString().trim();
+
+            if (ten.isEmpty() || giaText.isEmpty() || soLuongText.isEmpty()) {
+                Toast.makeText(getContext(), "Vui lòng nhập đủ thông tin!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int gia = Integer.parseInt(giaText);
+            int soLuong = Integer.parseInt(soLuongText);
+
+            ContentValues values = new ContentValues();
+            values.put("tenSanPham", ten);
+            values.put("soLuongTon", soLuong);
+            values.put("giaBan", gia);
+
+            long result = mydatabase.insert("tbHangHoa", null, values);
+
+            if (result == -1) {
+                Toast.makeText(getContext(), "Tên sản phẩm đã tồn tại!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Thêm thành công!", Toast.LENGTH_SHORT).show();
+                loadData();
+
+                editText_nameproduct.setText("");
+                editText_price.setText("");
+                editText_quantity.setText("");
+            }
+        });
+
 
         return view;
     }
 
-    private void khoiTaoDuLieu() {
-        danhSachHangHoa = new ArrayList<>();
+    // ======================
+    // LOAD DATA TỪ SQLITE
+    // ======================
+    public void loadData() {
+        danhSachHangHoa.clear();
 
-        // Thêm dữ liệu mẫu
-        danhSachHangHoa.add(new HangHoa("Trà sữa", 50, 20000));
-        danhSachHangHoa.add(new HangHoa("Trà đào", 30, 25000));
-        danhSachHangHoa.add(new HangHoa("Cafe đen", 40, 15000));
-        danhSachHangHoa.add(new HangHoa("Cafe sữa", 35, 20000));
-        danhSachHangHoa.add(new HangHoa("Cafe đá", 25, 25000));
+        Cursor c = mydatabase.query("tbHangHoa",
+                null, null, null, null, null, null);
+
+        if (c.moveToFirst()) {
+            while (!c.isAfterLast()) {
+
+                String ten = c.getString(0);
+                int soLuong = c.getInt(1);
+                int giaBan = c.getInt(2);
+
+                danhSachHangHoa.add(new HangHoa(ten, soLuong, giaBan));
+
+                c.moveToNext();
+            }
+        }
+        c.close();
+
+        capNhatTongTon();
+        capNhatTongSanPham();
+        adapter.notifyDataSetChanged();
     }
 
+    // ======================
+    // CẬP NHẬT TỔNG TỒN
+    // ======================
     private void capNhatTongTon() {
         int tongTon = 0;
         for (HangHoa hh : danhSachHangHoa) {
             tongTon += hh.getSoLuongTon();
         }
-        txt_tongton.setText(String.valueOf(tongTon));
+        txt_tongton.setText("Tổng tồn: " + tongTon);
+    }
+    private void capNhatTongSanPham() {
+        int tongSanPham = danhSachHangHoa.size();
+        txt_tongsanpham.setText("Tổng sản phẩm: " + tongSanPham);
     }
 
-    // Class model cho Hàng Hóa
+    // ================================
+    // MODEL HÀNG HÓA
+    // ================================
     public static class HangHoa {
         private String tenSanPham;
         private int soLuongTon;
@@ -71,56 +166,103 @@ public class HangHoaFragment extends Fragment {
             this.giaBan = giaBan;
         }
 
-        public String getTenSanPham() {
-            return tenSanPham;
-        }
+        public String getTenSanPham() { return tenSanPham; }
+        public int getSoLuongTon() { return soLuongTon; }
+        public int getGiaBan() { return giaBan; }
+    }
+    private void showUpdateDialog(HangHoa hangHoa) {
+        android.app.Dialog dialog = new android.app.Dialog(getContext());
+        dialog.setContentView(R.layout.popup_update_hanghoa);
 
-        public void setTenSanPham(String tenSanPham) {
-            this.tenSanPham = tenSanPham;
-        }
+        EditText edtName = dialog.findViewById(R.id.edit_update_name);
+        EditText edtPrice = dialog.findViewById(R.id.edit_update_price);
+        EditText edtQuantity = dialog.findViewById(R.id.edit_update_quantity);
+        Button btnSave = dialog.findViewById(R.id.btn_update_save);
+        Button btnExit = dialog.findViewById(R.id.btn_update_exit);
 
-        public int getSoLuongTon() {
-            return soLuongTon;
-        }
+        // Gán dữ liệu vào popup
+        edtName.setText(hangHoa.getTenSanPham());
+        edtPrice.setText(String.valueOf(hangHoa.getGiaBan()));
+        edtQuantity.setText(String.valueOf(hangHoa.getSoLuongTon()));
 
-        public void setSoLuongTon(int soLuongTon) {
-            this.soLuongTon = soLuongTon;
-        }
+        // ===============================
+        // NÚT LƯU → UPDATE DATABASE
+        // ===============================
+        btnSave.setOnClickListener(v -> {
 
-        public int getGiaBan() {
-            return giaBan;
-        }
+            int gia = Integer.parseInt(edtPrice.getText().toString());
+            int soLuong = Integer.parseInt(edtQuantity.getText().toString());
 
-        public void setGiaBan(int giaBan) {
-            this.giaBan = giaBan;
-        }
+            ContentValues values = new ContentValues();
+            values.put("giaBan", gia);
+            values.put("soLuongTon", soLuong);
+
+            mydatabase.update("tbHangHoa",
+                    values,
+                    "tenSanPham = ?",
+                    new String[]{hangHoa.getTenSanPham()});
+
+            Toast.makeText(getContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+
+            dialog.dismiss();
+            loadData(); // load lại danh sách
+        });
+
+        // ===============================
+        // NÚT THOÁT
+        // ===============================
+        btnExit.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
-    // Custom Adapter cho ListView
-    private static class HangHoaAdapter extends ArrayAdapter<HangHoa> {
+    // ================================
+    // ADAPTER HIỂN THỊ LISTVIEW
+    // ================================
+    public class HangHoaAdapter extends ArrayAdapter<HangHoa> {
 
-        public HangHoaAdapter(android.content.Context context, ArrayList<HangHoa> hangHoas) {
+        public HangHoaAdapter(@NonNull android.content.Context context,
+                              @NonNull ArrayList<HangHoa> hangHoas) {
             super(context, 0, hangHoas);
         }
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+        public View getView(int position, View convertView,
+                            @NonNull ViewGroup parent) {
+
             HangHoa hangHoa = getItem(position);
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_hang_hoa, parent, false);
+                convertView = LayoutInflater.from(getContext())
+                        .inflate(R.layout.item_hang_hoa, parent, false);
             }
 
             TextView tvTenSP = convertView.findViewById(R.id.tv_ten_sp);
             TextView tvSoLuong = convertView.findViewById(R.id.tv_so_luong);
             TextView tvGiaBan = convertView.findViewById(R.id.tv_gia_ban);
+            Button btnEdit = convertView.findViewById(R.id.btn_edit);
+            Button btnDelete = convertView.findViewById(R.id.btn_delete);
 
             if (hangHoa != null) {
                 tvTenSP.setText(hangHoa.getTenSanPham());
                 tvSoLuong.setText("SL tồn: " + hangHoa.getSoLuongTon());
                 tvGiaBan.setText(String.format("%,d VNĐ", hangHoa.getGiaBan()));
             }
+            btnDelete.setOnClickListener(v -> {
+                mydatabase.delete("tbHangHoa", "tenSanPham = ?",
+                        new String[]{hangHoa.getTenSanPham()});
+
+                Toast.makeText(getContext(), "Đã xóa!", Toast.LENGTH_SHORT).show();
+                loadData();// load lại danh sách
+            });
+
+            // =======================
+            // XỬ LÝ NÚT SỬA
+            // =======================
+            btnEdit.setOnClickListener(v -> {
+                showUpdateDialog(hangHoa);
+            });
 
             return convertView;
         }
