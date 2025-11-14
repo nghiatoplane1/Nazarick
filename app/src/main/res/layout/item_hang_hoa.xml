@@ -1,69 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="10dp"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFFFFF">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="3dp"
+    android:foreground="?android:attr/selectableItemBackground">
 
-    <!-- Thông tin sản phẩm -->
-
-    <!-- Hàng nút thao tác -->
     <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="end"
-        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
+        <!-- Thông tin sản phẩm -->
         <LinearLayout
-            android:layout_width="186dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tv_ten_sp"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_ten_sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tên sản phẩm"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121" />
+
+                <TextView
+                    android:id="@+id/tv_so_luong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SL tồn: 0"
+                    android:textSize="15sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/tv_gia_ban"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 VNĐ"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#8BC34A"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Nút thao tác -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tên SP"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_so_luong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SL tồn: 0"
-                android:textSize="16sp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_edit"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:text="Sửa"
+                    android:textSize="14sp"
+                    app:strokeColor="#FFC107"
+                    app:iconGravity="start"
+                    app:iconTint="#FFC107" />
 
-            <TextView
-                android:id="@+id/tv_gia_ban"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0 VNĐ"
-                android:textSize="16sp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_delete"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Xóa"
+                    android:textSize="14sp"
+                    app:strokeColor="#F44336"
+                    app:iconGravity="start"
+                    app:iconTint="#F44336" />
+            </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_edit"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:background="#FFC107"
-            android:text="Sửa" />
-
-        <Button
-            android:id="@+id/btn_delete"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="#F44336"
-            android:text="Xóa"
-            android:textColor="#FFFFFF" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:background="#BDBDBD"/>
-</LinearLayout>
+</androidx.cardview.widget.CardView>
