@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class HangHoaFragment extends Fragment {
 
-    private TextView txt_hanghoa, txt_tongton, txt_tongsanpham;
+    private TextView txt_tongton, txt_tongsanpham;
     private ListView listView;
     private ArrayList<HangHoa> danhSachHangHoa;
     private HangHoaAdapter adapter;
@@ -42,7 +42,6 @@ public class HangHoaFragment extends Fragment {
         editText_nameproduct = view.findViewById(R.id.editText_nameproduct);
         editText_price = view.findViewById(R.id.editText_price);
         editText_quantity = view.findViewById(R.id.editText_quantity);
-        txt_hanghoa = view.findViewById(R.id.txt_hanghoa);
         txt_tongton = view.findViewById(R.id.txt_hanghoa);
         txt_tongsanpham = view.findViewById(R.id.txt_tongsanpham);
         listView = view.findViewById(R.id.lv_hanghoa);
@@ -74,7 +73,7 @@ public class HangHoaFragment extends Fragment {
         // Thêm sản phẩm mẫu khi nhấn button
         button_addproduct.setOnClickListener(v -> {
 
-            String ten = editText_nameproduct.getText().toString().trim();
+            String ten = editText_nameproduct.getText().toString().trim().toLowerCase();
             String giaText = editText_price.getText().toString().trim();
             String soLuongText = editText_quantity.getText().toString().trim();
 
