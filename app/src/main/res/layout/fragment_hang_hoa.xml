@@ -5,7 +5,7 @@
     android:id="@+id/fragment_hang_hoa_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/background_color"
     tools:context=".HangHoaFragment">
 
     <!-- Tiêu đề -->
@@ -13,11 +13,11 @@
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#8BC34A"
+        android:background="@color/header_background"
         android:gravity="center"
         android:padding="16dp"
         android:text="Hàng hóa"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/header_text"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="12dp"
-        android:background="#FFFFFF"
+        android:background="@color/card_background"
         android:elevation="2dp"
         app:layout_constraintTop_toBottomOf="@id/textView"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Tổng sản phẩm:"
-            android:textColor="#2e63a8"
+            android:textColor="@color/text_title"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:textColor="#2e63a8"
+            android:textColor="@color/text_title"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -154,7 +154,7 @@
         android:id="@+id/lv_hanghoa"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:divider="#EEEEEE"
+        android:divider="@color/divider_color"
         android:dividerHeight="1dp"
         android:layout_margin="16dp"
         android:clipToPadding="false"
