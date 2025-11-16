@@ -80,7 +80,7 @@ public class HangHoaFragment extends Fragment {
         // Thêm sản phẩm mẫu khi nhấn button
         button_addproduct.setOnClickListener(v -> {
 
-            String ten = editText_nameproduct.getText().toString().trim();
+            String ten = editText_nameproduct.getText().toString().trim().toLowerCase();
             String giaText = editText_price.getText().toString().trim();
             String soLuongText = editText_quantity.getText().toString().trim();
 
