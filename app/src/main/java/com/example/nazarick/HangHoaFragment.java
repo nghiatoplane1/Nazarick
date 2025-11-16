@@ -113,7 +113,18 @@ public class HangHoaFragment extends Fragment {
 
         return view;
     }
+    private void capNhatTongTon() {
+        int tongTon = 0;
+        for (HangHoa hh : danhSachHienThi) { // Dùng danh sách hiển thị
+            tongTon += hh.getSoLuongTon();
+        }
+        txt_tongton.setText("Tổng tồn: " + tongTon);
+    }
 
+    private void capNhatTongSanPham() {
+        int tongSanPham = danhSachHienThi.size();
+        txt_tongsanpham.setText("Tổng sản phẩm: " + tongSanPham);
+    }
     // ======================
     // LOAD DATA TỪ SQLITE
     // ======================
@@ -164,22 +175,7 @@ public class HangHoaFragment extends Fragment {
         capNhatTongSanPham();
     }
 
-    // ======================
-    // CẬP NHẬT TỔNG TỒN & SỐ LƯỢNG HIỆN THỊ
-    // ======================
-    private void capNhatTongTon() {
-        int tongTon = 0;
-        for (HangHoa hh : danhSachHienThi) { // Dùng danh sách hiển thị
-            tongTon += hh.getSoLuongTon();
-        }
-        txt_tongton.setText("Tổng tồn: " + tongTon);
-    }
-
-    private void capNhatTongSanPham() {
-        int tongSanPham = danhSachHienThi.size();
-        txt_tongsanpham.setText("Tổng sản phẩm: " + tongSanPham);
-    }
-
+    
     // ================================
     // MODEL HÀNG HÓA
     // ================================
