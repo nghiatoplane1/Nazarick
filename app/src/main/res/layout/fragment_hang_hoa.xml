@@ -138,6 +138,14 @@
                 app:cornerRadius="8dp"
                 app:iconGravity="start"
                 app:iconPadding="8dp" />
+
+            <EditText
+                android:id="@+id/edit_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:hint="Tìm sản phẩm..."
+                android:padding="12dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

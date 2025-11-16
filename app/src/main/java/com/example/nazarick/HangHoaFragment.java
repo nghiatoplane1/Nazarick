@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +24,15 @@ import java.util.ArrayList;
 
 public class HangHoaFragment extends Fragment {
 
-    private TextView txt_hanghoa, txt_tongton, txt_tongsanpham;
+    private TextView txt_tongton, txt_tongsanpham;
     private ListView listView;
-    private ArrayList<HangHoa> danhSachHangHoa;
+    private ArrayList<HangHoa> danhSachHangHoa;      // Danh sách gốc
+    private ArrayList<HangHoa> danhSachHienThi;      // Danh sách hiển thị (đã lọc)
     private HangHoaAdapter adapter;
     EditText editText_nameproduct;
     EditText editText_price;
     EditText editText_quantity;
+    EditText edit_search; // Ô tìm kiếm
     Button button_addproduct;
     static SQLiteDatabase mydatabase;
 
@@ -42,34 +46,36 @@ public class HangHoaFragment extends Fragment {
         editText_nameproduct = view.findViewById(R.id.editText_nameproduct);
         editText_price = view.findViewById(R.id.editText_price);
         editText_quantity = view.findViewById(R.id.editText_quantity);
-        txt_hanghoa = view.findViewById(R.id.txt_hanghoa);
+        edit_search = view.findViewById(R.id.edit_search); // Khởi tạo ô tìm kiếm
         txt_tongton = view.findViewById(R.id.txt_hanghoa);
         txt_tongsanpham = view.findViewById(R.id.txt_tongsanpham);
         listView = view.findViewById(R.id.lv_hanghoa);
         button_addproduct = view.findViewById(R.id.button_addproduct);
 
-        // Mở / tạo database giống MainActivity
-        mydatabase = requireActivity().openOrCreateDatabase("quanlytaphoa.db",
-                getContext().MODE_PRIVATE, null);
-
-        // Tạo bảng nếu chưa có
-        try {
-
-            String sql = "CREATE TABLE tbHangHoa(" +
-                    "tenSanPham TEXT PRIMARY KEY, " +
-                    "soLuongTon INTEGER, " +
-                    "giaBan INTEGER)";
-            mydatabase.execSQL(sql);
-        } catch (Exception e) {
-            // bảng đã tồn tại
-        }
+        DatabaseHelper dbHelper = new DatabaseHelper(requireContext());
+        mydatabase = dbHelper.getWritableDatabase();
 
         danhSachHangHoa = new ArrayList<>();
-        adapter = new HangHoaAdapter(requireContext(), danhSachHangHoa);
+        danhSachHienThi = new ArrayList<>();
+        adapter = new HangHoaAdapter(requireContext(), danhSachHienThi);
         listView.setAdapter(adapter);
 
         // Load dữ liệu khi mở fragment
         loadData();
+
+        // =================== TÌM KIẾM SẢN PHẨM ===================
+        edit_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                timKiemSanPham(s.toString().trim());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         // Thêm sản phẩm mẫu khi nhấn button
         button_addproduct.setOnClickListener(v -> {
@@ -97,14 +103,13 @@ public class HangHoaFragment extends Fragment {
                 Toast.makeText(getContext(), "Tên sản phẩm đã tồn tại!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Thêm thành công!", Toast.LENGTH_SHORT).show();
-                loadData();
+                loadData(); // Tải lại dữ liệu → cập nhật cả tìm kiếm
 
                 editText_nameproduct.setText("");
                 editText_price.setText("");
                 editText_quantity.setText("");
             }
         });
-
 
         return view;
     }
@@ -120,35 +125,58 @@ public class HangHoaFragment extends Fragment {
 
         if (c.moveToFirst()) {
             while (!c.isAfterLast()) {
-
                 String ten = c.getString(0);
                 int soLuong = c.getInt(1);
                 int giaBan = c.getInt(2);
 
                 danhSachHangHoa.add(new HangHoa(ten, soLuong, giaBan));
-
                 c.moveToNext();
             }
         }
         c.close();
 
+        // Cập nhật danh sách hiển thị (lọc theo tìm kiếm hiện tại)
+        timKiemSanPham(edit_search.getText().toString().trim());
+
         capNhatTongTon();
         capNhatTongSanPham();
-        adapter.notifyDataSetChanged();
     }
 
     // ======================
-    // CẬP NHẬT TỔNG TỒN
+    // TÌM KIẾM SẢN PHẨM
+    // ======================
+    private void timKiemSanPham(String keyword) {
+        danhSachHienThi.clear();
+
+        if (keyword.isEmpty()) {
+            danhSachHienThi.addAll(danhSachHangHoa);
+        } else {
+            String lowerKeyword = keyword.toLowerCase();
+            for (HangHoa hh : danhSachHangHoa) {
+                if (hh.getTenSanPham().toLowerCase().contains(lowerKeyword)) {
+                    danhSachHienThi.add(hh);
+                }
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+        capNhatTongTon();
+        capNhatTongSanPham();
+    }
+
+    // ======================
+    // CẬP NHẬT TỔNG TỒN & SỐ LƯỢNG HIỆN THỊ
     // ======================
     private void capNhatTongTon() {
         int tongTon = 0;
-        for (HangHoa hh : danhSachHangHoa) {
+        for (HangHoa hh : danhSachHienThi) { // Dùng danh sách hiển thị
             tongTon += hh.getSoLuongTon();
         }
         txt_tongton.setText("Tổng tồn: " + tongTon);
     }
+
     private void capNhatTongSanPham() {
-        int tongSanPham = danhSachHangHoa.size();
+        int tongSanPham = danhSachHienThi.size();
         txt_tongsanpham.setText("Tổng sản phẩm: " + tongSanPham);
     }
 
@@ -169,7 +197,16 @@ public class HangHoaFragment extends Fragment {
         public String getTenSanPham() { return tenSanPham; }
         public int getSoLuongTon() { return soLuongTon; }
         public int getGiaBan() { return giaBan; }
+
+        @Override
+        public String toString() {
+            return tenSanPham;
+        }
     }
+
+    // ================================
+    // HIỆN POPUP CẬP NHẬT
+    // ================================
     private void showUpdateDialog(HangHoa hangHoa) {
         android.app.Dialog dialog = new android.app.Dialog(getContext());
         dialog.setContentView(R.layout.popup_update_hanghoa);
@@ -180,39 +217,38 @@ public class HangHoaFragment extends Fragment {
         Button btnSave = dialog.findViewById(R.id.btn_update_save);
         Button btnExit = dialog.findViewById(R.id.btn_update_exit);
 
-        // Gán dữ liệu vào popup
         edtName.setText(hangHoa.getTenSanPham());
         edtPrice.setText(String.valueOf(hangHoa.getGiaBan()));
         edtQuantity.setText(String.valueOf(hangHoa.getSoLuongTon()));
 
-        // ===============================
-        // NÚT LƯU → UPDATE DATABASE
-        // ===============================
         btnSave.setOnClickListener(v -> {
+            String tenMoi = edtName.getText().toString().trim();
+            if (tenMoi.isEmpty()) {
+                Toast.makeText(getContext(), "Tên không được để trống!", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             int gia = Integer.parseInt(edtPrice.getText().toString());
             int soLuong = Integer.parseInt(edtQuantity.getText().toString());
 
             ContentValues values = new ContentValues();
+            values.put("tenSanPham", tenMoi);
             values.put("giaBan", gia);
             values.put("soLuongTon", soLuong);
 
-            mydatabase.update("tbHangHoa",
-                    values,
-                    "tenSanPham = ?",
-                    new String[]{hangHoa.getTenSanPham()});
+            // Cập nhật với tên cũ
+            int rows = mydatabase.update("tbHangHoa", values, "tenSanPham = ?", new String[]{hangHoa.getTenSanPham()});
 
-            Toast.makeText(getContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
-
-            dialog.dismiss();
-            loadData(); // load lại danh sách
+            if (rows > 0) {
+                Toast.makeText(getContext(), "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                loadData(); // Tải lại dữ liệu
+            } else {
+                Toast.makeText(getContext(), "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();
+            }
         });
 
-        // ===============================
-        // NÚT THOÁT
-        // ===============================
         btnExit.setOnClickListener(v -> dialog.dismiss());
-
         dialog.show();
     }
 
@@ -249,20 +285,16 @@ public class HangHoaFragment extends Fragment {
                 tvSoLuong.setText("SL tồn: " + hangHoa.getSoLuongTon());
                 tvGiaBan.setText(String.format("%,d VNĐ", hangHoa.getGiaBan()));
             }
+
             btnDelete.setOnClickListener(v -> {
                 mydatabase.delete("tbHangHoa", "tenSanPham = ?",
                         new String[]{hangHoa.getTenSanPham()});
 
                 Toast.makeText(getContext(), "Đã xóa!", Toast.LENGTH_SHORT).show();
-                loadData();// load lại danh sách
+                loadData(); // Tải lại dữ liệu → cập nhật tìm kiếm
             });
 
-            // =======================
-            // XỬ LÝ NÚT SỬA
-            // =======================
-            btnEdit.setOnClickListener(v -> {
-                showUpdateDialog(hangHoa);
-            });
+            btnEdit.setOnClickListener(v -> showUpdateDialog(hangHoa));
 
             return convertView;
         }
