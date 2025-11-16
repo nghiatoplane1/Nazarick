@@ -1,5 +1,6 @@
 package com.example.nazarick;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,11 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String PREFS_NAME = "NazarickSettings";
+    private static final String KEY_DARK_MODE = "dark_mode_enabled";
 
     // Danh sách icon
     private int[] tabIcons = {
@@ -34,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Khôi phục dark mode trước khi setContentView
+        restoreDarkModeState();
+        
         setContentView(R.layout.activity_main);
 
         TabLayout tabLayout = findViewById(R.id.tablayout);
@@ -107,5 +116,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * Khôi phục trạng thái dark mode từ SharedPreferences khi ứng dụng khởi động
+     */
+    private void restoreDarkModeState() {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        boolean isDarkModeEnabled = sharedPreferences.getBoolean(KEY_DARK_MODE, false);
+        
+        if (isDarkModeEnabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 }

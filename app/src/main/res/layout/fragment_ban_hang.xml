@@ -5,14 +5,14 @@
     android:id="@+id/fragment_ban_hang_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
+    android:background="@color/background_color"
     tools:context=".BanHangFragment">
 
     <!-- Tiêu đề -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#8BC34A"
+        android:background="@color/header_background"
         android:orientation="vertical">
 
         <TextView
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="Bán hàng"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/header_text"
             android:textSize="28sp"
             android:textStyle="bold"
             android:gravity="center" />
@@ -68,7 +68,7 @@
                             android:layout_weight="1"
                             android:text="Chọn sản phẩm:"
                             android:textSize="16sp"
-                            android:textColor="#555555" />
+                            android:textColor="@color/text_primary" />
 
                         <Spinner
                             android:id="@+id/spinner_sp"
@@ -99,7 +99,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Sản phẩm:"
                                 android:textSize="15sp"
-                                android:textColor="#666666" />
+                                android:textColor="@color/text_secondary" />
 
                             <EditText
                                 android:id="@+id/edit_sp"
@@ -125,7 +125,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Số lượng:"
                                 android:textSize="15sp"
-                                android:textColor="#666666" />
+                                android:textColor="@color/text_secondary" />
 
                             <EditText
                                 android:id="@+id/edit_soluong"
@@ -170,19 +170,19 @@
                         android:id="@+id/textView5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#EEEEEE"
+                        android:background="@color/divider_color"
                         android:gravity="center"
                         android:padding="12dp"
                         android:text="CÁC SẢN PHẨM ĐÃ MUA"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#333333" />
+                        android:textColor="@color/text_primary" />
 
                     <ListView
                         android:id="@+id/lv"
                         android:layout_width="match_parent"
                         android:layout_height="220dp"
-                        android:divider="#E0E0E0"
+                        android:divider="@color/divider_color"
                         android:dividerHeight="1dp"
                         android:padding="8dp"
                         android:clipToPadding="false" />
@@ -224,7 +224,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Tổng tiền thanh toán:"
-                            android:textColor="#333333"
+                            android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
