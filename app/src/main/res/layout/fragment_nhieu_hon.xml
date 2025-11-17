@@ -16,7 +16,7 @@
         android:background="@color/header_background"
         android:gravity="center"
         android:padding="16dp"
-        android:text="Cài đặt"
+        android:text="NHIỀU HƠN"
         android:textColor="@color/header_text"
         android:textSize="28sp"
         android:textStyle="bold"
