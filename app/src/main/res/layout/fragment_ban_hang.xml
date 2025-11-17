@@ -108,6 +108,7 @@
                                 android:layout_marginTop="4dp"
 
                                 android:ems="10"
+                                android:enabled="false"
                                 android:inputType="text"
                                 android:padding="12dp" />
                         </LinearLayout>
