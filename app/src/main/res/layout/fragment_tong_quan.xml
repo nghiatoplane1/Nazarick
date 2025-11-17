@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/background_color"
     tools:context=".TongQuanFragment">
 
     <ScrollView
@@ -24,7 +24,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="12dp"
-                android:background="@android:color/white"
+                android:background="@color/card_background"
                 android:elevation="4dp"
                 android:layout_marginBottom="16dp">
 
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="NAZARICK"
-                    android:textColor="#1976D2"
+                    android:textColor="@color/text_title"
                     android:textSize="48sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -53,7 +53,7 @@
                 android:text="Thống kê tổng quan"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#333"
+                android:textColor="@color/text_primary"
                 android:layout_marginBottom="12dp"/>
 
             <!-- Hàng đầu: Tổng hóa đơn và Doanh thu -->
@@ -175,7 +175,7 @@
                 android:text="Biểu đồ doanh thu"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#333"
+                android:textColor="@color/text_primary"
                 android:layout_marginBottom="12dp"/>
 
             <androidx.cardview.widget.CardView
@@ -190,7 +190,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="16dp"
-                    android:background="@android:color/white">
+                    android:background="@color/card_background">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -198,7 +198,7 @@
                         android:text="Doanh thu 7 ngày gần nhất"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#666"
+                        android:textColor="@color/text_secondary"
                         android:layout_marginBottom="8dp"/>
 
                     <FrameLayout
@@ -221,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="Top doanh thu"
-                android:textColor="#333"
+                android:textColor="@color/text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -236,7 +236,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp"
-                    android:background="@android:color/white">
+                    android:background="@color/card_background">
 
                     <!-- Item 1 -->
                     <LinearLayout
@@ -244,7 +244,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="12dp"
-                        android:background="#F9F9F9"
+                        android:background="@color/divider_color"
                         android:layout_marginBottom="8dp">
 
                         <TextView
@@ -270,7 +270,7 @@
                                 android:text="Chưa có dữ liệu"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:textColor="#333"/>
+                                android:textColor="@color/text_primary"/>
 
                             <TextView
                                 android:id="@+id/tvTop1Quantity"
@@ -278,7 +278,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Đã bán: 0 sản phẩm"
                                 android:textSize="14sp"
-                                android:textColor="#666"/>
+                                android:textColor="@color/text_secondary"/>
                         </LinearLayout>
 
                         <TextView
@@ -298,7 +298,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="12dp"
-                        android:background="#F9F9F9"
+                        android:background="@color/divider_color"
                         android:layout_marginBottom="8dp">
 
                         <TextView
@@ -324,7 +324,7 @@
                                 android:text="Chưa có dữ liệu"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:textColor="#333"/>
+                                android:textColor="@color/text_primary"/>
 
                             <TextView
                                 android:id="@+id/tvTop2Quantity"
@@ -332,7 +332,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Đã bán: 0 sản phẩm"
                                 android:textSize="14sp"
-                                android:textColor="#666"/>
+                                android:textColor="@color/text_secondary"/>
                         </LinearLayout>
 
                         <TextView
@@ -352,7 +352,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:padding="12dp"
-                        android:background="#F9F9F9">
+                        android:background="@color/divider_color">
 
                         <TextView
                             android:layout_width="30dp"
@@ -377,7 +377,7 @@
                                 android:text="Chưa có dữ liệu"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:textColor="#333"/>
+                                android:textColor="@color/text_primary"/>
 
                             <TextView
                                 android:id="@+id/tvTop3Quantity"
@@ -385,7 +385,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Đã bán: 0 sản phẩm"
                                 android:textSize="14sp"
-                                android:textColor="#666"/>
+                                android:textColor="@color/text_secondary"/>
                         </LinearLayout>
 
                         <TextView

@@ -25,9 +25,7 @@ public class ExportInvoiceHelper {
         this.db = dbHelper.getReadableDatabase();
     }
 
-    /**
-     * Xuất hóa đơn ra file CSV (có thể mở bằng Excel, Google Sheets, Notepad, v.v.)
-     */
+
     public boolean exportToFile() {
         try {
             // Tạo tên file với timestamp
