@@ -1,6 +1,7 @@
 package com.example.nazarick;
 
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -27,6 +28,7 @@ public class NhieuHonFragment extends Fragment {
     private TextView textViewVersion;
     private SharedPreferences sharedPreferences;
     private View layoutExportData;
+    private View layoutResetData;
 
     public NhieuHonFragment() {
         // Required empty public constructor
@@ -64,6 +66,7 @@ public class NhieuHonFragment extends Fragment {
         switchDarkMode = view.findViewById(R.id.sw_dark_mode);
         textViewVersion = view.findViewById(R.id.txt_version);
         layoutExportData = view.findViewById(R.id.layout_export_data);
+        layoutResetData = view.findViewById(R.id.layout_reset_data);
         
         // Hiển thị phiên bản (có thể lấy từ BuildConfig)
         if (textViewVersion != null) {
@@ -99,6 +102,11 @@ public class NhieuHonFragment extends Fragment {
         // Sự kiện khi click vào "Xuất hóa đơn"
         if (layoutExportData != null) {
             layoutExportData.setOnClickListener(v -> showExportDialog());
+        }
+        
+        // Sự kiện khi click vào "Reset dữ liệu"
+        if (layoutResetData != null) {
+            layoutResetData.setOnClickListener(v -> showResetDataDialog());
         }
     }
     
@@ -181,6 +189,60 @@ public class NhieuHonFragment extends Fragment {
         } else {
             // Tắt chế độ tối (sử dụng chế độ sáng)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+    }
+    
+    /**
+     * Hiển thị dialog xác nhận reset dữ liệu
+     */
+    private void showResetDataDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Reset dữ liệu")
+                .setMessage("Bạn có chắc chắn muốn xóa TẤT CẢ dữ liệu không?\n\n" +
+                           "Hành động này sẽ xóa:\n" +
+                           "• Tất cả hàng hóa\n" +
+                           "• Tất cả hóa đơn\n\n" +
+                           "⚠️ Hành động này KHÔNG THỂ hoàn tác!")
+                .setPositiveButton("Xóa tất cả", (dialog, which) -> resetAllData())
+                .setNegativeButton("Hủy", null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+    
+    /**
+     * Reset tất cả dữ liệu về mặc định (xóa tất cả)
+     */
+    private void resetAllData() {
+        try {
+            DatabaseHelper dbHelper = new DatabaseHelper(requireContext());
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            
+            // Xóa tất cả dữ liệu trong bảng tbHangHoa
+            db.delete("tbHangHoa", null, null);
+            
+            // Xóa tất cả dữ liệu trong bảng tbHoaDon
+            db.delete("tbHoaDon", null, null);
+            
+            // Đóng database
+            db.close();
+            dbHelper.close();
+            
+            // Thông báo thành công
+            Toast.makeText(requireContext(), 
+                    "Đã reset dữ liệu thành công!\nTất cả dữ liệu đã được xóa.", 
+                    Toast.LENGTH_LONG).show();
+            
+            // Gợi ý người dùng refresh app
+            new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                    .setTitle("Reset thành công")
+                    .setMessage("Dữ liệu đã được xóa. Vui lòng chuyển tab để cập nhật giao diện.")
+                    .setPositiveButton("OK", null)
+                    .show();
+                    
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), 
+                    "Lỗi khi reset dữ liệu: " + e.getMessage(), 
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }
