@@ -26,8 +26,8 @@ public class HangHoaFragment extends Fragment {
 
     private TextView txt_tongton, txt_tongsanpham;
     private ListView listView;
-    private ArrayList<HangHoa> danhSachHangHoa;      // Danh sách gốc
-    private ArrayList<HangHoa> danhSachHienThi;      // Danh sách hiển thị (đã lọc)
+    private ArrayList<HangHoa> danhSachHangHoa;
+    private ArrayList<HangHoa> danhSachHienThi;
     private HangHoaAdapter adapter;
     EditText editText_nameproduct;
     EditText editText_price;

@@ -20,4 +20,9 @@
     <color name="divider_color">#EEEEEE</color>
     <color name="header_background">#8BC34A</color>
     <color name="header_text">#FFFFFF</color>
+    <!-- Màu cho biểu đồ -->
+    <color name="chart_blue">#2196F3</color>
+    <color name="chart_green">#4CAF50</color>
+    <color name="chart_orange">#FF9800</color>
+    <color name="chart_red">#F44336</color>
 </resources>

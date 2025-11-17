@@ -19,12 +19,12 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:padding="16dp"
-            android:text="Bán hàng"
+            android:text="BÁN HÀNG"
             android:textColor="@color/header_text"
             android:textSize="28sp"
-            android:textStyle="bold"
-            android:gravity="center" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Nội dung cuộn -->
